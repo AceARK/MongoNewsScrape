@@ -1,0 +1,27 @@
+{
+  "name": "mongonewsscrape",
+  "version": "1.0.0",
+  "description": "Full stack app using cheerio to scrape news, mongoose orm to store scraped news and notes on it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AceARK/MongoNewsScrape.git"
+  },
+  "author": "Ace",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AceARK/MongoNewsScrape/issues"
+  },
+  "homepage": "https://github.com/AceARK/MongoNewsScrape#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cheerio": "^0.22.0",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.9.5",
+    "request": "^2.81.0"
+  }
+}
