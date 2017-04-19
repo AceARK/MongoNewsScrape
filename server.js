@@ -9,6 +9,10 @@ var cheerio = require("cheerio");
 // Setting mongoose to leverage Promises
 mongoose.Promise = Promise;
 
+// Requiring Article and Note models
+var Article = require("./models/Article.js");
+var Note = require("./models/Note.js");
+
 // Setting port
 var port = process.env.PORT || 3000;
 
@@ -52,8 +56,6 @@ db.once("open", function() {
 
 /*
 
-Routing to retrieve homepage with all articles from database or display none yet -> get to /
-
 Routing for button press to scrape articles -> get to /scrape
 
 Routing to get saved articles -> get to /saved
@@ -63,6 +65,57 @@ Routing to save notes to article with specific id -> post to /articles/:id
 Routing to get saved notes for article with specific id -> get to /articles/:id
 
 */
+
+app.get("/articles", function(req, res) {
+  // Find all from Article 
+  Article.find({}, function(error, data) {
+    // If error,
+    if (error) {
+      console.log(error);
+    }
+    // Else send data
+    else {
+      res.json(data);
+    }
+  });
+});
+
+app.get("/scrape", function(req, res) {
+	// First, we grab the body of the html with request
+	request("http://www.echojs.com/", function(error, response, html) {
+	    // Then, we load that into cheerio and save it to $ for a shorthand selector
+	    var $ = cheerio.load(html);
+	    // Now, we grab every h2 within an article tag, and do the following:
+	    $("article h2").each(function(i, element) {
+
+	      // Save an empty result object
+	      var result = {};
+
+	      // Add the text and href of every link, and save them as properties of the result object
+	      result.title = $(this).children("a").text();
+	      result.link = $(this).children("a").attr("href");
+
+	      // Using our Article model, create a new entry
+	      // This effectively passes the result object to the entry (and the title and link)
+	      var entry = new Article(result);
+
+	      // Now, save that entry to the db
+	      entry.save(function(err, doc) {
+	        // Log any errors
+	        if (err) {
+	          console.log(err);
+	        }
+	        // Or log the doc
+	        else {
+	          console.log(doc);
+	        }
+	      });
+
+	    });
+	});
+	// Tell the browser that we finished scraping the text
+	res.send("Scrape Complete");
+});
 
 // Listening on port
 app.listen(port, function() {
