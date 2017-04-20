@@ -6,17 +6,32 @@ var Schema = mongoose.Schema;
 // Create Article schema
 var ArticleSchema = new Schema({
   // Title 
-  title: {
+  headline: {
     type: String,
     required: true
   },
   // Link 
+  summary: {
+    type: String,
+    // required: true
+  },
+  // Link
   link: {
     type: String,
-    required: true
+    // required: true
+  },
+  // By-line
+  byline: {
+    type: String
+    // required: true
+  },
+  // Flag to mark as saved
+  saved_flag: {
+    type: Boolean,
+    default: false
   },
   // To save note ids as reference to each note
-  note: {
+  notes: {
     type: Schema.Types.ObjectId,
     ref: "Note"
   }

@@ -31,6 +31,7 @@ var exphbs = require("express-handlebars");
 // Setting default view engine to handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+// exphbs.registerPartials(__dirname + '/views/partials');
 
 // Database configuration with mongoose on production or dev environment
 if(process.env.MONGODB_URI) {
@@ -66,55 +67,100 @@ Routing to get saved notes for article with specific id -> get to /articles/:id
 
 */
 
-app.get("/articles", function(req, res) {
+app.get("/", function(req, res) {
   // Find all from Article 
   Article.find({}, function(error, data) {
     // If error,
     if (error) {
-      console.log(error);
+      	console.log(error);
     }
     // Else send data
-    else {
-      res.json(data);
+    else if(data) {
+    	// console.log(data);
+    	res.render("index", {articles: data});
+    } else {
+    	res.render("index");
     }
   });
 });
 
 app.get("/scrape", function(req, res) {
+	// Initialize results array to render articledata partial
+	var resultsArray = [];
+	var promiseArray = [];
+
 	// First, we grab the body of the html with request
-	request("http://www.echojs.com/", function(error, response, html) {
+	request("https://www.nytimes.com/section/world?WT.nav=page&action=click&contentCollection=World&module=HPMiniNav&pgtype=Homepage&region=TopBar", function(error, response, html) {
 	    // Then, we load that into cheerio and save it to $ for a shorthand selector
 	    var $ = cheerio.load(html);
-	    // Now, we grab every h2 within an article tag, and do the following:
-	    $("article h2").each(function(i, element) {
+		
+	    // Iterating over each required element
+	    $("ol.story-menu>li>article>div.story-body>a.story-link").each(function(i, element) {
+	    	console.log("ARTICLE INDEX: " + i);
+	    	// Capturing required properties of each element into variables
+	    	var link = $(element).attr("href");
+	    	// console.log("Link -> " + link);
 
-	      // Save an empty result object
-	      var result = {};
+	    	var headline = $(element).children().find(".headline").html().trim();
+	    	// console.log("Headline -> " + headline);
 
-	      // Add the text and href of every link, and save them as properties of the result object
-	      result.title = $(this).children("a").text();
-	      result.link = $(this).children("a").attr("href");
+	    	var summary = $(element).children().find(".summary").html().trim();
+	    	// console.log("Summary -> " + summary);
 
-	      // Using our Article model, create a new entry
-	      // This effectively passes the result object to the entry (and the title and link)
-	      var entry = new Article(result);
+	    	var byline = $(element).children().find(".byline").html();
+	    	// console.log("Byline -> " + byline);
 
-	      // Now, save that entry to the db
-	      entry.save(function(err, doc) {
-	        // Log any errors
-	        if (err) {
-	          console.log(err);
-	        }
-	        // Or log the doc
-	        else {
-	          console.log(doc);
-	        }
-	      });
+		    // Initialize result object
+		    var result = {};
 
+		    // Add the headline, link, summary and byline of each to result object
+		    result.headline = headline;
+		    result.link = link;
+		    result.summary = summary;
+		    result.byline = byline;
+
+		    // Create an entry object of Article model
+		    var entry = new Article(result);
+
+		    // Pushing each entry save into an array to use promise
+		    promiseArray.push(
+
+			    // Saving the entry to Articles
+			    entry.save(function(err, data) {
+			        // Log any errors
+			        if (err) {
+			          console.log("Error in db save: "+ err);
+			        }
+			        // Or log the doc
+			        else {
+			          	// Push result object to resultsArray
+			    		resultsArray.push(result);
+			        }
+		      	})
+			);
 	    });
+
+	    // Rendering partials after every entry is saved - using Promise for this
+	    Promise.all(promiseArray).then(function(data) {
+	    	console.log(resultsArray);
+	    	console.log(resultsArray.length);
+		    // Render articles onto index page using articledata partial
+		    res.render("partials/articledata", {articles: resultsArray, layout: false, length: resultsArray.length});
+	    });
+
 	});
-	// Tell the browser that we finished scraping the text
-	res.send("Scrape Complete");
+});
+
+app.get("/saved", function(req, res)  {
+	Article.find({saved_flag: true}, function(err, data) {
+		if(err){
+			console.log(err);
+		}else if(data){
+			res.render("saved", {saved: data});
+	    } else {
+	    	res.render("saved");
+	    }
+	});
 });
 
 // Listening on port

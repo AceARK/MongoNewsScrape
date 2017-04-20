@@ -1,8 +1,13 @@
-// Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-  }
+// Scrape articles and populate on click of button
+$("#scrapeArticles").on("click", function() {
+	$.get({
+		url: "/scrape",
+	}).done(function(data) {
+		console.log(data);
+		$("#articlesDiv").html(data);
+	}).fail(function(error) {
+		console.log("Scrape unsuccessful,  error -> ");
+		console.log(error);
+	});
 });
+

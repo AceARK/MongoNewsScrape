@@ -1,0 +1,56 @@
+<div id="articles">
+		{{#if articles}}
+			{{#each articles}}
+				<div class="panel panel-primary">
+				  <div class="panel-heading">
+				    <h2 class="panel-title">{{this.headline}}</h2>
+				  </div>
+				  <div class="panel-body">
+				  	<div class="col-xs-8">
+				  		<p class="summary">{{this.summary}}</p>
+					    <p class="byline">{{this.byline}}</p>
+					    <p class="link"><a href="{{this.link}}">Follow story here</a></p>
+				  	</div>
+				  	<div class="col-xs-2">
+				  		<button data-id="{{this._id}}" class="btn btn-warning">Add to Saved</button>
+				  	</div>
+				  	<div class="col-xs-2">
+				  		<button data-id="{{this._id}}" class="btn btn-warning">Add to Saved</button>
+				  	</div>
+				  </div>
+				</div>
+			{{/each}}
+		{{/if}}
+		{{#unless articles}}
+			{{#if saved}}
+				<div class="panel panel-primary">
+				  <div class="panel-heading">
+				    <h2 class="panel-title">{{this.headline}}</h2>
+				  </div>
+				  <div class="panel-body">
+				  	<div class="col-xs-8">
+				  		<p class="summary">{{this.summary}}</p>
+					    <p class="byline">{{this.byline}}</p>
+					    <p class="link"><a href="{{this.link}}">Follow story here</a></p>
+				  	</div>
+				  	<div class="col-xs-2">
+				  		<button data-id="{{this._id}}" class="btn btn-default">Add Notes</button>
+				  	</div>
+				  	<div class="col-xs-2">
+				  		<button data-id="{{this._id}}" class="btn btn-warning">Delete from Saved</button>
+				  	</div>
+				  </div>
+				</div>
+			{{/if}}
+			{{#unless saved}}
+			<div class="panel panel-warning">
+			  <div class="panel-heading">
+			    <h2 class="panel-title">No articles yet</h2>
+			  </div>
+			  <div class="panel-body">
+			    Click on 'Scrape New Articles' to get new articles.
+			  </div>
+			</div>
+			{{/unless}}
+		{{/unless}}
+	</div>
