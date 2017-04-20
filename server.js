@@ -67,26 +67,26 @@ Routing to get saved notes for article with specific id -> get to /articles/:id
 
 */
 
+function promiseAllArticles() {
+	// Query to find all from Article 
+	var query = Article.find();
+	// Return promise
+	return query.exec();
+}	
+
 app.get("/", function(req, res) {
-  // Find all from Article 
-  Article.find({}, function(error, data) {
-    // If error,
-    if (error) {
-      	console.log(error);
-    }
-    // Else send data
-    else if(data) {
-    	// console.log(data);
-    	res.render("index", {articles: data});
-    } else {
-    	res.render("index");
-    }
-  });
+	// Get all articles to display 
+  	promiseAllArticles().then(function(allArticlesData) {
+  		// Get saved articles to display count
+  		promiseSavedArticles().then(function(savedArticles) {
+  			// Render index with received data
+			res.render("index", {articles: allArticlesData, articleCount: allArticlesData.length, savedCount: savedArticles.length});
+  		})
+	});
 });
 
 app.get("/scrape", function(req, res) {
-	// Initialize results array to render articledata partial
-	var resultsArray = [];
+	// Initialize promise array to hold all save entry queries
 	var promiseArray = [];
 
 	// First, we grab the body of the html with request
@@ -131,35 +131,59 @@ app.get("/scrape", function(req, res) {
 			        if (err) {
 			          console.log("Error in db save: "+ err);
 			        }
-			        // Or log the doc
+			        // Or log saved entry
 			        else {
-			          	// Push result object to resultsArray
-			    		resultsArray.push(result);
+			    		console.log("Saved entry " + data);
 			        }
 		      	})
 			);
 	    });
 
 	    // Rendering partials after every entry is saved - using Promise for this
-	    Promise.all(promiseArray).then(function(data) {
-	    	console.log(resultsArray);
-	    	console.log(resultsArray.length);
-		    // Render articles onto index page using articledata partial
-		    res.render("partials/articledata", {articles: resultsArray, layout: false, length: resultsArray.length});
+	    Promise.all(promiseArray).then(function() {
+	    	// Execute promise function to fetch all articles
+	    	promiseAllArticles().then(function(allArticlesData) {
+	    		console.log(allArticlesData.length);
+	  			// Render articles onto index page using articledata partial
+	  			res.render("partials/articledata", {articles: allArticlesData, layout: false, articleCount: allArticlesData.length, savedCount: 0});
+			});
 	    });
 
 	});
 });
 
+// Function that promises to deliver all saved articles
+function promiseSavedArticles() {
+	var query = Article.find({saved_flag: true});
+	return query.exec();
+}
+
+// Get all saved articles and render saved page
 app.get("/saved", function(req, res)  {
-	Article.find({saved_flag: true}, function(err, data) {
+	 promiseSavedArticles().then(function(err, savedArticles) {
 		if(err){
 			console.log(err);
-		}else if(data){
-			res.render("saved", {saved: data});
-	    } else {
-	    	res.render("saved");
+		}else {
+			promiseAllArticles().then(function(err, allArticlesData) {
+				if(err) {
+					console.log(err);
+				}
+				res.render("saved", {saved: savedArticles, savedCount: savedArticles.length, articleCount: allArticlesData.length});
+			})
 	    }
+	});
+});
+
+// Update article saved_flag
+app.post("/save", function(req, res) {
+	// Find required article and update saved_flag
+	Article.findOneAndUpdate({"_id": req.body.id}, {saved_flag: true})
+	.exec(function(err, data) {
+		if(err) {
+			console.log(err);
+		}else {
+			res.send(data);
+		}
 	});
 });
 

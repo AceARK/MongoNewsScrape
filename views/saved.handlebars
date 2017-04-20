@@ -13,13 +13,14 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home <span class="sr-only">(current)</span></a></li>
-        <li><a href="/saved">Saved Articles</a></li>
+        <li class="active"><a href="/">Home <span class="badge">{{articleCount}}</span></a></li>
+        <li><a href="/saved">Saved Articles <span class="badge">{{savedCount}}</span></a></li>
       </ul>
     </div>
   </div>
 </nav>
 <div class="container">
+	{{> articledata }}
 	{{!-- Background / pic with text --}}
 	{{!-- Handlebars code for panel generation based on articles with saved flag set --}}
 	{{!-- Each panel has buttons -> Article notes, Delete from saved --}}
