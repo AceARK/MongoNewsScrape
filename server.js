@@ -1,6 +1,11 @@
 // Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
+console.log("**********************************");
+console.log("**********************************");
+console.log("**********************************");
+console.log("**********************************");
+console.log("**********************************");
 // Database ORM
 var mongoose = require("mongoose");
 // Scraping tools
