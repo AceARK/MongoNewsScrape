@@ -15,6 +15,8 @@ $("#scrapeArticles").on("click", function() {
 		// Set badges in menubar
 		$("span.home").html(articleCount);
 		$("span.saved").html(savedCount);
+		// Display modal
+		// $("#scrapeDoneModal").modal("show");
 		// Log count
 		console.log("ARTICLE COUNT: " + articleCount + " SAVED COUNT: " + savedCount);
 

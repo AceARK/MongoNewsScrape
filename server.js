@@ -66,6 +66,7 @@ Routing to get saved notes for article with specific id -> get to /articles/:id
 
 */
 
+// Function to return promise of finding all articles
 function promiseAllArticles() {
 	// Query to find all from Article 
 	var query = Article.find();
@@ -73,6 +74,7 @@ function promiseAllArticles() {
 	return query.exec();
 }	
 
+// Primary route hit when website loads
 app.get("/", function(req, res) {
 	// Get all articles to display 
   	promiseAllArticles().then(function(allArticlesData) {

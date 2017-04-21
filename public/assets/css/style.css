@@ -5,3 +5,7 @@
 /*.container {
 	background: ;
 }*/
+
+#scrapeDoneModal {
+	display: none;
+}
