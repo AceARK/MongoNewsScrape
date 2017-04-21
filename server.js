@@ -218,9 +218,86 @@ app.post("/unsave", function(req, res) {
 	Article.findOneAndUpdate({"_id": req.body.id}, {$set: {saved_flag: false}},{new: true})
 	.exec(function(err, data) {
 		if(err) {
+			res.send(err);
 			console.log(err);
 		}else {
 			res.send(data);
+		}
+	});
+});
+
+// Get notes for requested article
+app.get("/note/article/:id", function(req, res) {
+	// Find article with id and populate notes
+	Article.findOne({ "_id": req.params.id })
+  	// function to populate notes
+  	.populate("notes")
+  	// execute callback
+  	.exec(function(error, data) {
+	    // Log error
+	    if (error) {
+	    	res.send(error);
+	      	console.log(error);
+	    }
+	    // Send data back as json
+	    else {
+	    	console.log(data);
+	      	res.json(data);
+	    }
+  	});
+});
+
+// Add notes to article id
+app.post("/note/article/:id", function(req, res) {
+	console.log("REQ.BODY");
+	console.log(req.body);
+  // Create a new note and pass the req.body to the entry
+  var newNote = new Note(req.body);
+  console.log("NEW NOTE");
+  console.log(newNote);
+  // And save the new note the db
+  newNote.save(function(error, noteData) {
+    // Log any errors
+    if (error) {
+    	res.send(error);
+      	console.log(error);
+    }
+    // Otherwise
+    else {
+      // Use the article id to find and update it's note
+      Article.findOneAndUpdate({ "_id": req.params.id }, { $push: {"notes": noteData._id }})
+      // Execute the above query
+      .exec(function(err, data) {
+        // Log any errors
+        if (err) {
+          res.send(err);
+          console.log(err);
+        }
+        else {
+          // Or send the document to the browser
+          res.send(data);
+        }
+      });
+    }
+  });
+});
+
+// Delete a note from note model and it's article reference
+app.post("/note/delete", function(req, res) {
+	// Get articles with reference to that note and pop from array
+	Article.findOneAndUpdate({"_id": req.body.articleId}, {$pull : {"notes": req.body.noteId}})
+	.exec(function(err, data) {
+		if(err) {
+			console.log(err);
+		}else {
+			// Delete note with that id
+			Note.findByIdAndRemove(req.body.noteId).exec(function(err, data) {
+				if(err) {
+					console.log(err);
+				}else {
+					res.send(data);
+				}
+			});
 		}
 	});
 });

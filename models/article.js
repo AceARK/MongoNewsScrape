@@ -29,10 +29,10 @@ var ArticleSchema = new Schema({
     default: false
   },
   // To save note ids as reference to each note
-  notes: {
+  notes: [{
     type: Schema.Types.ObjectId,
     ref: "Note"
-  }
+  }]
 });
 
 // Create Article model with ArticleSchema

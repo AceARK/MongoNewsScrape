@@ -106,10 +106,82 @@ $(".savedArticle").on("click", ".undoSaveArticle", function() {
 // Add note code
 $(".savedArticle").on("click", ".addNote", function() {
 	var articleId = $(this).attr("data-id");
-	// Getting current button, to work with within ajax done
-	var addNoteButton = $(this);
-	
+	console.log(articleId);
+
+	// Get notes for this article
+	$.get({
+		url: "/note/article/" + articleId
+
+	}).done(function(data) {
+		$("#addNotesModal #saveNote").html("Save Note");
+		$("#addNotesModal #saveNote").attr("data-dismiss", "");
+		// Remove any error messages from previous tries here
+		$("div.alert-danger").remove();
+		// Empty note div before creating new notes within
+		$("#savedNotesDiv").empty();
+		console.log(data);
+		// Iterate through each note in data and create divs within savedNotesDiv
+		data.notes.forEach(function(noteItem) {
+			var noteDiv = $("<div class='noteItem'>");
+			noteDiv.html(noteItem.text);
+			noteDiv.append("<button data-id='" + noteItem._id + "' class='btn btn-danger deleteNote'><i class='fa fa-lg fa-times-circle-o' aria-hidden='true'></i></button>");
+			$("#savedNotesDiv").append(noteDiv);
+		});
+
+		// Setting data-id attribute of Save Note button with current articleId 
+		$("#saveNote").attr("data-id", articleId);
+		// Show notes modal
+		$("#addNotesModal").modal("show");
+	}).fail(function(error) {
+		console.log(error);
+	});
 });
 
+$("#saveNote").on("click", function(event) {
+	var articleId = $(this).attr("data-id");
+	console.log(articleId);
+	var noteContent = $("#newNote").val();
+	// Post new note 
+	$.post({
+		url: "/note/article/" + articleId,
+		data: { text: noteContent }
+	}).done(function(data) {
+		console.log(data);
+		if(data.errors) {
+			$("#addNotesModal .modal-body").prepend("<div class='text-center alert alert-danger'>Article notes cannot be empty.</div>");
+			$("#addNotesModal #saveNote").attr("data-dismiss", "modal");
+			$("#addNotesModal #saveNote").html("Ok");
+		}else {
+			$("#addNotesModal").modal("hide");
+			$("#newNote").val("");
+		}
+	}).fail(function(error) { 
+		console.log("Note could not be saved.");
+		console.log(error);
+	})
+});
 
+$("#savedNotesDiv").on("click", ".deleteNote", function() {
+	var noteId = $(this).attr("data-id");
+	var articleId = $("#saveNote").attr("data-id");
+	// Find the noteDiv to remove after post
+	var noteToDelete = $(this).parent();
+	// Post new note 
+	$.post({
+		url: "/note/delete",
+		data: { 
+			noteId: noteId,
+			articleId: articleId
+		}
+		
+	}).done(function(data) {
+		console.log(data);
+		// Remove note from savedNotesDiv
+		noteToDelete.remove();
+
+	}).fail(function(error) { 
+		console.log("Note could not be saved.");
+		console.log(error);
+	})
+});
 
