@@ -31,7 +31,6 @@ var exphbs = require("express-handlebars");
 // Setting default view engine to handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-// exphbs.registerPartials(__dirname + '/views/partials');
 
 // Database configuration with mongoose on production or dev environment
 if(process.env.MONGODB_URI) {
@@ -77,11 +76,16 @@ function promiseAllArticles() {
 app.get("/", function(req, res) {
 	// Get all articles to display 
   	promiseAllArticles().then(function(allArticlesData) {
-  		// Get saved articles to display count
-  		promiseSavedArticles().then(function(savedArticles) {
-  			// Render index with received data
-			res.render("index", {articles: allArticlesData, articleCount: allArticlesData.length, savedCount: savedArticles.length});
-  		})
+  		// Get saved articles to display count using ES6 version of reduce()
+  		var savedArticleCount = allArticlesData.reduce((a, b) => {
+  			// If saved_flag, add 1 else 0
+  			return a + (b.saved_flag ? 1 : 0);
+  		},0);
+
+		// Render index with received data
+		res.render("index", 
+		{articles: allArticlesData, articleCount: allArticlesData.length, savedCount: savedArticleCount});
+  		
 	});
 });
 
@@ -129,11 +133,12 @@ app.get("/scrape", function(req, res) {
 			    entry.save(function(err, data) {
 			        // Log any errors
 			        if (err) {
-			          console.log("Error in db save: "+ err);
+			          console.log("ERROR IN DB SAVE");
+			          console.log(result.headline);
 			        }
 			        // Or log saved entry
 			        else {
-			    		console.log("Saved entry " + data);
+			    		console.log("ENTRY SAVED" + i);
 			        }
 		      	})
 			);
@@ -145,39 +150,55 @@ app.get("/scrape", function(req, res) {
 	    	promiseAllArticles().then(function(allArticlesData) {
 	    		console.log(allArticlesData.length);
 	  			// Render articles onto index page using articledata partial
-	  			res.render("partials/articledata", {articles: allArticlesData, layout: false, articleCount: allArticlesData.length, savedCount: 0});
+	  			res.render("partials/articledata", 
+	  			{articles: allArticlesData, layout: false, articleCount: allArticlesData.length, savedCount: 0});
 			});
 	    });
 
 	});
 });
 
-// Function that promises to deliver all saved articles
-function promiseSavedArticles() {
-	var query = Article.find({saved_flag: true});
-	return query.exec();
-}
 
-// Get all saved articles and render saved page
-app.get("/saved", function(req, res)  {
-	 promiseSavedArticles().then(function(err, savedArticles) {
-		if(err){
-			console.log(err);
-		}else {
-			promiseAllArticles().then(function(err, allArticlesData) {
-				if(err) {
-					console.log(err);
-				}
-				res.render("saved", {saved: savedArticles, savedCount: savedArticles.length, articleCount: allArticlesData.length});
-			})
-	    }
+// Proper way to find only saved articles ->
+/*
+*	// Function that promises to deliver all saved articles
+*	function promiseSavedArticles() {
+*	 	var query = Article.find({saved_flag: true});
+*		return query.exec();
+*	}
+*/
+// DIFFERENT METHOD TO WRITE CODE USED BELOW THIS CHUNK
+/*
+*	// Get all saved articles and render saved page
+*	app.get("/saved", function(req, res)  {
+*	
+*		 promiseSavedArticles().then(function(savedArticles) {
+*
+*			res.render("saved", 
+*				{saved: savedArticles, savedCount: savedArticles.length});
+*		});
+*	});
+*/
+// Not using this method, and 
+// Pulling data from find({}) in order to get allArticlesCount 
+// to display badge data on front-end
+
+
+// Getting all saved articles from all articles
+app.get("/saved", function(req, res) {
+	promiseAllArticles().then(function(allArticlesData) {
+		// Using ES6 style filter to find only saved articles
+		var savedArticles = allArticlesData.filter(article => article.saved_flag === true);
+		// Render data to saved page
+		res.render("saved", {saved: savedArticles, savedCount: savedArticles.length, articleCount: allArticlesData.length});
 	});
 });
+
 
 // Update article saved_flag
 app.post("/save", function(req, res) {
 	// Find required article and update saved_flag
-	Article.findOneAndUpdate({"_id": req.body.id}, {saved_flag: true})
+	Article.findOneAndUpdate({"_id": req.body.id}, {$set: {saved_flag: true}},{new: true})
 	.exec(function(err, data) {
 		if(err) {
 			console.log(err);
@@ -186,6 +207,20 @@ app.post("/save", function(req, res) {
 		}
 	});
 });
+
+// Undo save i.e. set saved_flag to false
+app.post("/unsave", function(req, res) {
+	// Find the article with id and set saved_flag to false
+	Article.findOneAndUpdate({"_id": req.body.id}, {$set: {saved_flag: false}},{new: true})
+	.exec(function(err, data) {
+		if(err) {
+			console.log(err);
+		}else {
+			res.send(data);
+		}
+	});
+});
+
 
 // Listening on port
 app.listen(port, function() {

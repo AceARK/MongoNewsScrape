@@ -8,22 +8,20 @@ var ArticleSchema = new Schema({
   // Title 
   headline: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   // Link 
   summary: {
-    type: String,
-    // required: true
+    type: String
   },
   // Link
   link: {
-    type: String,
-    // required: true
+    type: String
   },
   // By-line
   byline: {
     type: String
-    // required: true
   },
   // Flag to mark as saved
   saved_flag: {

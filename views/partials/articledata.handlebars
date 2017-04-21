@@ -1,7 +1,9 @@
 <div id="articles">
+		<input type="hidden" id="articleCountInfo" value="{{articleCount}}">
+		<input type="hidden" id="savedCountInfo" value="{{savedCount}}">
 		{{#if articles}}
 			{{#each articles}}
-				<div class="panel panel-primary">
+				<div class="panel article panel-primary">
 				  <div class="panel-heading">
 				  	{{!-- using handlebars html escaping -> {{{content}}} --}}
 				    <h2 class="panel-title">{{{this.headline}}}</h2>
@@ -17,7 +19,7 @@
 				  		<button data-id="{{this._id}}" class="btn btn-success saveArticle">Add to Saved</button>
 				  		{{/unless}}
 				  		{{#if this.saved_flag}}
-				  		<span><i style='color: green;' class='fa fa-3x fa-check' aria-hidden='true'></i>Saved Article</span>
+				  		<i style='color: green;' class='fa fa-3x fa-check' aria-hidden='true'></i>
 				  		{{/if}}
 				  	</div>
 				  </div>
@@ -27,7 +29,7 @@
 		{{#unless articles}}
 			{{#if saved}}
 				{{#each saved}}
-					<div class="panel panel-primary">
+					<div class="panel savedArticle panel-primary">
 					  <div class="panel-heading">
 					  	{{!-- using handlebars html escaping -> {{{content}}} --}}
 					    <h2 class="panel-title">{{{this.headline}}}</h2>
@@ -49,7 +51,7 @@
 				{{/each}}
 			{{/if}}
 			{{#unless saved}}
-			<div class="panel panel-danger">
+			<div class="panel noArticle panel-danger">
 			  <div class="panel-heading">
 			    <h2 class="panel-title">No articles yet</h2>
 			  </div>
