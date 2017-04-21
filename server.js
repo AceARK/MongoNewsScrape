@@ -135,8 +135,8 @@ app.get("/scrape", function(req, res) {
 			    entry.save(function(err, data) {
 			        // Log any errors
 			        if (err) {
-			          console.log("ERROR IN DB SAVE");
-			          console.log(result.headline);
+			          console.log("ERROR IN DB SAVE ->");
+			          console.log("DUPLICATE ENTRY -> " + result.headline);
 			        }
 			        // Or log saved entry
 			        else {

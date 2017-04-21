@@ -1,6 +1,11 @@
 var articleCount;
 var savedCount;
 
+var scrapedArticleCount;
+
+articleCount = $("span.home").html();
+console.log("ARticle count before scrape->" + articleCount);
+
 // Scrape articles and populate on click of button
 $("#scrapeArticles").on("click", function() {
 	$.get({
@@ -9,6 +14,9 @@ $("#scrapeArticles").on("click", function() {
 	}).done(function(data) {
 		// Display rendered articledata handlebars in articlesDiv
 		$("#articlesDiv").html(data);
+		// Calculate scrapedArticleCount
+		scrapedArticleCount = parseInt($("#articleCountInfo").val()) - parseInt(articleCount);
+		$("#scrapedArticleCount").html(scrapedArticleCount);
 		// Get all and saved articles count
 		articleCount = $("#articleCountInfo").val();
 		savedCount = $("#savedCountInfo").val();
@@ -16,7 +24,7 @@ $("#scrapeArticles").on("click", function() {
 		$("span.home").html(articleCount);
 		$("span.saved").html(savedCount);
 		// Display modal
-		// $("#scrapeDoneModal").modal("show");
+		$("#scrapeDoneModal").modal("show");
 		// Log count
 		console.log("ARTICLE COUNT: " + articleCount + " SAVED COUNT: " + savedCount);
 
@@ -34,9 +42,9 @@ $("#articlesDiv").on("click", ".saveArticle", function() {
 	// Get saved article count
 	savedCount = $("span.saved").html();
 	console.log(savedCount);
-	// Getting current button to work with within ajax done
+	// Getting current button, to work with within ajax done
 	var saveButton = $(this);
-	// Mark article as saved and hide save button
+	// Disable save button
 	saveButton.prop('disabled', true);
 
 	// Post request to mark article as saved
@@ -65,3 +73,33 @@ $("#articlesDiv").on("click", ".saveArticle", function() {
 		saveButton.prop('disabled', false);
 	});
 });
+
+$(".savedArticle").on("click", ".undoSaveArticle", function() {
+	var articleId = $(this).attr("data-id");
+	// Getting current button, to work with within ajax done
+	var unsaveButton = $(this);
+	// Disable unsave button
+	unsaveButton.prop('disabled', true);
+	// Post to mark article as unsaved
+	$.post({
+		url: "/unsave",
+		data: {id: articleId}
+
+	}).done(function(data) {
+		// Get saved article count and decrement
+		savedCount = $("span.saved").html();
+		savedCount--;
+		console.log(savedCount);
+		// Set updated saved count
+		$("span.saved").html(savedCount);
+		// Remove article from saved articles display
+		unsaveButton.parent().parent().parent().remove();
+	}).fail(function(error) {
+		// Log error
+		console.log("Could not remove from saved, error ->");
+		console.log(error);
+		// Re-enable save button to try saving again
+		unsaveButton.prop('disabled', false);
+	});
+});
+
