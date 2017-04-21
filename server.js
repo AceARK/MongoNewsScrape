@@ -1,11 +1,9 @@
 // Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
+
 console.log("**********************************");
-console.log("**********************************");
-console.log("**********************************");
-console.log("**********************************");
-console.log("**********************************");
+
 // Database ORM
 var mongoose = require("mongoose");
 // Scraping tools
@@ -15,8 +13,8 @@ var cheerio = require("cheerio");
 mongoose.Promise = Promise;
 
 // Requiring Article and Note models
-var Article = require("./models/Article.js");
-var Note = require("./models/Note.js");
+var Article = require("./models/article.js");
+var Note = require("./models/note.js");
 
 // Setting port
 var port = process.env.PORT || 3000;
