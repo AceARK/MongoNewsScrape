@@ -27,4 +27,23 @@
 	{{!-- Sticky footer --}}
 
 	{{!-- Modal that pops up on click of Article notes with handelbars code to populate if notes present --}}
+	<div id="addNotesModal" class="modal fade text-center" role="dialog">
+	    <div class="modal-dialog">
+	        <!-- Error Modal content-->
+	      	<div class="modal-content">
+	        	<div class="modal-header">
+	        		<h4>Article Notes</h4>
+	          		<button type="button" class="close" data-dismiss="modal"><i class="fa fa-lg fa-times-circle-o" aria-hidden="true"></i></button>
+	        	</div>
+	        	<div class="modal-body">
+	        		<div id="savedNotesDiv"></div>
+					<input type="textarea" id="newNote"></input>
+	          		<button type="button" class="btn btn-lg btn-danger left-block" data-dismiss="modal">Ok</button>
+	        	</div>
+	        	{{!-- <div class="modal-footer">
+	          		
+	        	</div> --}}
+	      	</div>
+	    </div>
+  	</div>
 </div>

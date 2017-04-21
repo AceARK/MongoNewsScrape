@@ -34,6 +34,7 @@ app.set("view engine", "handlebars");
 
 // Database configuration with mongoose on production or dev environment
 if(process.env.MONGODB_URI) {
+	console.log("Attempting to connect to MLAB");
  	mongoose.connect("mongodb://heroku_qjgc5lj7:dt2mgr29ir18prn7j23f4er74u@ds163010.mlab.com:63010/heroku_qjgc5lj7");
 
 }else {
@@ -161,16 +162,14 @@ app.get("/scrape", function(req, res) {
 });
 
 
-// Proper way to find only saved articles ->
+// USUAL WAY TO FIND JUST THE SAVED ARTICLES ->
 /*
 *	// Function that promises to deliver all saved articles
 *	function promiseSavedArticles() {
 *	 	var query = Article.find({saved_flag: true});
 *		return query.exec();
 *	}
-*/
-// DIFFERENT METHOD TO WRITE CODE USED BELOW THIS CHUNK
-/*
+*
 *	// Get all saved articles and render saved page
 *	app.get("/saved", function(req, res)  {
 *	
@@ -181,9 +180,9 @@ app.get("/scrape", function(req, res) {
 *		});
 *	});
 */
-// Not using this method, and 
-// Pulling data from find({}) in order to get allArticlesCount 
-// to display badge data on front-end
+// NOT USING ABOVE METHOD AND INSTEAD,
+// PULLING REQUIRED DATA FROM  - find({}) -  QUERY RESULTS (USED BELOW), 
+// TO GET  - allArticlesCount -  FOR DISPLAY ON BADGES ON FRONT-END.
 
 
 // Getting all saved articles from all articles

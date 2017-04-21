@@ -24,7 +24,7 @@ $("#scrapeArticles").on("click", function() {
 		$("span.home").html(articleCount);
 		$("span.saved").html(savedCount);
 		// Display modal
-		$("#scrapeDoneModal").modal("show");
+		$("#scrapeDoneNotificationModal").modal("show");
 		// Log count
 		console.log("ARTICLE COUNT: " + articleCount + " SAVED COUNT: " + savedCount);
 
@@ -102,4 +102,14 @@ $(".savedArticle").on("click", ".undoSaveArticle", function() {
 		unsaveButton.prop('disabled', false);
 	});
 });
+
+// Add note code
+$(".savedArticle").on("click", ".addNote", function() {
+	var articleId = $(this).attr("data-id");
+	// Getting current button, to work with within ajax done
+	var addNoteButton = $(this);
+	
+});
+
+
 
