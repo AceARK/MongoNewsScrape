@@ -124,7 +124,7 @@ $(".savedArticle").on("click", ".addNote", function() {
 		data.notes.forEach(function(noteItem) {
 			var noteDiv = $("<div class='noteItem'>");
 			noteDiv.html(noteItem.text);
-			noteDiv.append("<button data-id='" + noteItem._id + "' class='btn btn-danger deleteNote'><i class='fa fa-lg fa-times-circle-o' aria-hidden='true'></i></button>");
+			noteDiv.append("<button data-id='" + noteItem._id + "' class='btn btn-danger deleteNote'><i class='fa fa-times' aria-hidden='true'></i></button>");
 			$("#savedNotesDiv").append(noteDiv);
 		});
 
