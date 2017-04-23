@@ -31,6 +31,7 @@ body {
 	margin-bottom: 30px;
 	box-shadow: 0px 4px 10px gray, 
         -4px 4px 15px gray, 4px 4px 15px gray;
+	font-family: 'Roboto Slab', serif;
 }
 
 .noArticle {
@@ -147,6 +148,7 @@ button#closeNotesModal.close {
 #addNotesModal .modal-content {
 	background: linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
                 rgba(255,255,255,0.55) url("../images/notesBg.png") no-repeat center center fixed;
+	font-family: 'Roboto Slab', serif;
 }
 
 html {
