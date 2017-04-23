@@ -41,7 +41,7 @@ body {
 .panel-heading {
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
-	height: 55px;
+	min-height: 55px;
 }
 
 .panel-title {
@@ -108,6 +108,7 @@ button#closeNotesModal.close {
 }
 
 .noteItem {
+	background-color: white;
 	text-align: left;
 	width: 70%;
 	min-height: 20px;
@@ -141,4 +142,19 @@ button#closeNotesModal.close {
 	margin-top: 20px;
 	height: 70px;
 	margin-bottom: 15px;
+}
+
+#addNotesModal .modal-content {
+	background: linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+                rgba(255,255,255,0.55) url("../images/notesBg.png") no-repeat center center fixed;
+}
+
+.footer {
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 5px;
+	background-image: linear-gradient(#1d9ce5, #2fa4e7 60%, #54b4eb);
+	border-color: #0e7bba;
+	border-radius: 5px;
+	color: white;
 }
