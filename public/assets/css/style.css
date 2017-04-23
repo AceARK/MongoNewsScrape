@@ -2,10 +2,18 @@
 	box-sizing: border-box;
 }
 
-/*.container {
-	background: ;
-}*/
-
 #scrapeDoneModal {
 	display: none;
+}
+
+.panel-title {
+	font-size: 22px;
+}
+
+.panel-body {
+	font-size: 16px;
+}
+
+.panel-primary {
+	border-radius: 10px;
 }

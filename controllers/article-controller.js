@@ -16,7 +16,7 @@ module.exports = function(app) {
 	app.get("/", function(req, res) {
 		// Get all articles to display 
 	  	promiseAllArticles().then(function(allArticlesData) {
-	  		// Get saved articles to display count using ES6 version of reduce()
+	  		// Get saved articles to display count using flashy method with ES6 version of reduce()
 	  		var savedArticleCount = allArticlesData.reduce((a, b) => {
 	  			// If saved_flag, add 1 else 0
 	  			return a + (b.saved_flag ? 1 : 0);
@@ -33,6 +33,7 @@ module.exports = function(app) {
 	app.get("/scrape", function(req, res) {
 		// Initialize promise array to hold all save entry queries
 		var promiseArray = [];
+		console.log(req.body.savedCount);
 
 		// First, we grab the body of the html with request
 		request("https://www.nytimes.com/section/world?WT.nav=page&action=click&contentCollection=World&module=HPMiniNav&pgtype=Homepage&region=TopBar", function(error, response, html) {
@@ -41,7 +42,6 @@ module.exports = function(app) {
 			
 		    // Iterating over each required element
 		    $("ol.story-menu>li>article>div.story-body>a.story-link").each(function(i, element) {
-		    	console.log("ARTICLE INDEX: " + i);
 		    	// Capturing required properties of each element into variables
 		    	var link = $(element).attr("href");
 		    	// console.log("Link -> " + link);
@@ -74,12 +74,15 @@ module.exports = function(app) {
 				    entry.save(function(err, data) {
 				        // Log any errors
 				        if (err) {
-				          console.log("ERROR IN DB SAVE ->");
-				          console.log("DUPLICATE ENTRY -> " + result.headline);
+				        	if(!err.message.includes("duplicate key error")) {
+				          		console.log(err);
+				        	}else {
+				        		console.log("Duplicate entry detected");
+				        	}
 				        }
 				        // Or log saved entry
 				        else {
-				    		console.log("ENTRY SAVED" + i);
+				    		console.log("Entry saved");
 				        }
 			      	})
 				);
@@ -89,10 +92,12 @@ module.exports = function(app) {
 		    Promise.all(promiseArray).then(function() {
 		    	// Execute promise function to fetch all articles
 		    	promiseAllArticles().then(function(allArticlesData) {
+		    		// Another less flashy ES6 way to 'filter' just the savedArticles from all
+		    		var savedArticleCount = (allArticlesData.filter(article => article.saved_flag === true)).length;
 		    		console.log(allArticlesData.length);
 		  			// Render articles onto index page using articledata partial
 		  			res.render("partials/articledata", 
-		  			{articles: allArticlesData, layout: false, articleCount: allArticlesData.length, savedCount: 0});
+		  			{articles: allArticlesData, layout: false, articleCount: allArticlesData.length, savedCount: savedArticleCount});
 				});
 		    });
 
@@ -126,8 +131,10 @@ module.exports = function(app) {
 	// Getting all saved articles from all articles
 	app.get("/saved", function(req, res) {
 		promiseAllArticles().then(function(allArticlesData) {
-			// Using ES6 style filter to find only saved articles
-			var savedArticles = allArticlesData.filter(article => article.saved_flag === true);
+			// Using the flashy ES6 reduce() way to find count again
+			var savedArticlesCount = allArticlesData.reduce((a, b) => {
+				return a + (b.saved_flag ? 1 : 0); 
+			}, 0);
 			// Render data to saved page
 			res.render("saved", {saved: savedArticles, savedCount: savedArticles.length, articleCount: allArticlesData.length});
 		});

@@ -1,12 +1,12 @@
 <div id="articles">
-		<input type="hidden" id="articleCountInfo" value="{{articleCount}}">
-		<input type="hidden" id="savedCountInfo" value="{{savedCount}}">
+		{{!-- <input type="hidden" id="articleCountInfo" value="{{articleCount}}">
+		<input type="hidden" id="savedCountInfo" value="{{savedCount}}"> --}}
 		{{#if articles}}
 			{{#each articles}}
 				<div class="panel article panel-primary">
 				  <div class="panel-heading">
 				  	{{!-- using handlebars html escaping -> {{{content}}} --}}
-				    <h2 class="panel-title">{{{this.headline}}}</h2>
+				    <h1 class="panel-title">{{{this.headline}}}</h1>
 				  </div>
 				  <div class="panel-body">
 				  	<div class="col-xs-8">
@@ -44,7 +44,7 @@
 					  		<button data-id="{{this._id}}" class="btn btn-info addNote">Add Notes</button>
 					  	</div>
 					  	<div class="col-sm-2">
-					  		<button data-id="{{this._id}}" class="btn btn-warning undoSaveArticle">Unsave</button>
+					  		<button data-id="{{this._id}}" class="btn btn-primary undoSaveArticle">Unsave</button>
 					  	</div>
 					  </div>
 					</div>
