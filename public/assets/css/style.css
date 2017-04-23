@@ -17,7 +17,7 @@ body {
 
 .panel-body, .panel, .panel-primary {
 	font-size: 16px;
-	color: #333333;
+	color: #444444;
 	background-color: rgb(255,255,255, 0.3);
 }
 
@@ -149,12 +149,23 @@ button#closeNotesModal.close {
                 rgba(255,255,255,0.55) url("../images/notesBg.png") no-repeat center center fixed;
 }
 
-.footer {
-	text-align: center;
-	padding-top: 15px;
-	padding-bottom: 5px;
-	background-image: linear-gradient(#1d9ce5, #2fa4e7 60%, #54b4eb);
-	border-color: #0e7bba;
-	border-radius: 5px;
-	color: white;
+html {
+  position: relative;
+  min-height: 100%;
 }
+body {
+   /*Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: #555555;
+   /*Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px;  
+}
+
+
