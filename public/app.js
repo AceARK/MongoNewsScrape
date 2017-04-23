@@ -15,9 +15,9 @@ $("#scrapeArticles").on("click", function() {
 		// Display rendered articledata handlebars in articlesDiv
 		$("#articlesDiv").html(data);
 		// Calculate scrapedArticleCount
-		scrapedArticleCount = parseInt($("#articleCountInfo").val()) - parseInt(articleCount);
+		scrapedArticleCount = Math.abs(parseInt($("#articleCountInfo").val()) - parseInt(articleCount));
 		$("#scrapedArticleCount").html(scrapedArticleCount);
-
+		$("span.home").html($("#articleCountInfo").val());
 		// Display modal
 		$("#scrapeDoneNotificationModal").modal("show");
 
