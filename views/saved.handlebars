@@ -21,10 +21,6 @@
 </nav>
 <div class="container">
 	{{> articledata }}
-	{{!-- Background / pic with text --}}
-	{{!-- Handlebars code for panel generation based on articles with saved flag set --}}
-	{{!-- Each panel has buttons -> Article notes, Delete from saved --}}
-	{{!-- Sticky footer --}}
 
 	{{!-- Modal that pops up on click of Article notes with handelbars code to populate if notes present --}}
 	<div id="addNotesModal" class="modal fade text-center" role="dialog">
@@ -40,13 +36,11 @@
 					<input type="text" class="form-control form-lg" id="newNote"></input>
 	          		<button type="button" id="saveNote" class="btn btn-success">Save Note</button>
 	        	</div>
-	        	{{!-- <div class="modal-footer">
-	          		
-	        	</div> --}}
 	      	</div>
 	    </div>
   	</div>
 </div>
+{{!-- Sticky footer --}}
 <footer class="footer">
   <div class="container">
     <p class="footerContent tex-center">&copy; Mongo News | Akhila</p>
