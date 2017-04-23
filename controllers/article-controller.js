@@ -131,10 +131,8 @@ module.exports = function(app) {
 	// Getting all saved articles from all articles
 	app.get("/saved", function(req, res) {
 		promiseAllArticles().then(function(allArticlesData) {
-			// Using the flashy ES6 reduce() way to find count again
-			var savedArticlesCount = allArticlesData.reduce((a, b) => {
-				return a + (b.saved_flag ? 1 : 0); 
-			}, 0);
+			// Using ES6 style filter to find only saved articles
+			var savedArticles = allArticlesData.filter(article => article.saved_flag === true);
 			// Render data to saved page
 			res.render("saved", {saved: savedArticles, savedCount: savedArticles.length, articleCount: allArticlesData.length});
 		});

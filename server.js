@@ -8,7 +8,7 @@ console.log("**********************************");
 var mongoose = require("mongoose");
 
 // // Setting mongoose to leverage Promises
-// mongoose.Promise = Promise;
+mongoose.Promise = Promise;
 
 // Setting port
 var port = process.env.PORT || 3000;

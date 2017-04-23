@@ -17,3 +17,7 @@
 .panel-primary {
 	border-radius: 10px;
 }
+
+button {
+	outline: none !important;
+}
