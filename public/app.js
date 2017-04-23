@@ -102,14 +102,16 @@ $(".savedArticle").on("click", ".addNote", function() {
 		$("#addNotesModal #saveNote").attr("data-dismiss", "");
 		// Remove any error messages from previous tries here
 		$("div.alert-danger").remove();
+		// Remove error-input on input tag
+		$("#addNotesModal #newNote").removeClass("remove-default").removeClass("error-input");
 		// Empty note div before creating new notes within
 		$("#savedNotesDiv").empty();
 
 		// Iterate through each note in data and create divs within savedNotesDiv
 		data.notes.forEach(function(noteItem) {
 			var noteDiv = $("<div class='noteItem'>");
-			noteDiv.html(noteItem.text);
-			noteDiv.append("<button data-id='" + noteItem._id + "' class='btn btn-danger deleteNote'><i class='fa fa-times' aria-hidden='true'></i></button>");
+			noteDiv.html("<div class='col-xs-11'>" + noteItem.text + "</div>");
+			noteDiv.append("<button data-id='" + noteItem._id + "' class='col-sm-1 btn btn-danger btn-xs deleteNote'><i class='fa fa-times' aria-hidden='true'></i></button>");
 			$("#savedNotesDiv").append(noteDiv);
 		});
 
@@ -133,7 +135,8 @@ $("#saveNote").on("click", function(event) {
 	}).done(function(data) {
 		// If save note has error, show alert, change 'Save Note' to 'Ok' and allow modal dismiss
 		if(data.errors) {
-			$("#addNotesModal .modal-body").prepend("<div class='text-center alert alert-danger'>Article notes cannot be empty.</div>");
+			$("#addNotesModal #newNote").addClass("remove-default").addClass("error-input");
+			$("#addNotesModal .modal-body").prepend("<div class='text-center alert alert-danger'>Article note cannot be empty.</div>");
 			$("#addNotesModal #saveNote").attr("data-dismiss", "modal");
 			$("#addNotesModal #saveNote").html("Ok");
 		}else {

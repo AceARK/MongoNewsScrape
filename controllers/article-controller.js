@@ -43,16 +43,12 @@ module.exports = function(app) {
 		    $("ol.story-menu>li>article>div.story-body>a.story-link").each(function(i, element) {
 		    	// Capturing required properties of each element into variables
 		    	var link = $(element).attr("href");
-		    	// console.log("Link -> " + link);
 
 		    	var headline = $(element).children().find(".headline").html().trim();
-		    	// console.log("Headline -> " + headline);
 
 		    	var summary = $(element).children().find(".summary").html().trim();
-		    	// console.log("Summary -> " + summary);
 
 		    	var byline = $(element).children().find(".byline").html();
-		    	// console.log("Byline -> " + byline);
 
 			    // Initialize result object
 			    var result = {};
@@ -180,7 +176,7 @@ module.exports = function(app) {
 		    }
 		    // Send data back as json
 		    else {
-		    	console.log(data);
+		    	// console.log(data);
 		      	res.json(data);
 		    }
 	  	});
@@ -192,14 +188,18 @@ module.exports = function(app) {
 		console.log(req.body);
 	  // Create a new note and pass the req.body to the entry
 	  var newNote = new Note(req.body);
-	  console.log("NEW NOTE");
+	  console.log("SAVING NEW NOTE");
 	  console.log(newNote);
 	  // And save the new note the db
 	  newNote.save(function(error, noteData) {
 	    // Log any errors
 	    if (error) {
 	    	res.send(error);
-	      	console.log(error);
+	    	if(error.message.includes("Note validation failed")) {
+	    		console.log("EMPTY NOTE WILL NOT BE SAVED");
+	    	}else {
+	    		console.log(error);
+	    	}
 	    }
 	    // Otherwise
 	    else {

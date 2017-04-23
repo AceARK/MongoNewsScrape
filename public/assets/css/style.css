@@ -75,6 +75,42 @@ button#closeNotesModal.close {
 	color: red;
 }
 
-.btn-success #saveNotes {
-	margin-left: : 0px;
+.btn-success.addNote, .btn-success#saveNote {
+	margin-left: 0px;
+}
+
+.noteItem {
+	text-align: left;
+	width: 70%;
+	min-height: 20px;
+	max-height: 70px;
+	border: 1px solid #BB1A20;
+	border-radius: 5px;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	padding: 12px;
+	padding-left: 5px;
+	padding-right: 8px;
+	overflow: scroll;
+}
+
+.deleteNote {
+	width : 22px;
+}
+
+
+.remove-default {
+	border: none;
+	box-shadow: none;
+}
+
+.error-input {
+	border: solid 0.2px #f95252;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.0), 0 0 7px rgba(187, 26, 32, 1);
+}
+
+#newNote {
+	margin-top: 20px;
+	height: 70px;
+	margin-bottom: 15px;
 }
