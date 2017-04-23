@@ -7,10 +7,9 @@ articleCount = $("span.home").html();
 
 // Scrape articles and populate on click of button
 $("#scrapeArticles").on("click", function() {
-	// savedCount = $("#savedCountInfo").val();
+	// Get /scrape route
 	$.get({
-		url: "/scrape",
-		data: {savedCount: savedCount}
+		url: "/scrape"
 
 	}).done(function(data) {
 		// Display rendered articledata handlebars in articlesDiv
@@ -18,7 +17,7 @@ $("#scrapeArticles").on("click", function() {
 		// Calculate scrapedArticleCount
 		scrapedArticleCount = parseInt($("#articleCountInfo").val()) - parseInt(articleCount);
 		$("#scrapedArticleCount").html(scrapedArticleCount);
-		
+
 		// Display modal
 		$("#scrapeDoneNotificationModal").modal("show");
 
@@ -50,7 +49,7 @@ $("#articlesDiv").on("click", ".saveArticle", function() {
 		$("span.saved").html(savedCount);
 
 		// Hide save button and mark as saved
-		saveButton.parent().append("<i style='color: green;' class='fa fa-3x fa-check' aria-hidden='true'></i>");
+		saveButton.parent().append("<i style='color: #57c65c;' class='fa fa-3x fa-check' aria-hidden='true'></i>");
 		saveButton.hide();
 
 	}).fail(function(error) {

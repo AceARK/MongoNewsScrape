@@ -33,7 +33,6 @@ module.exports = function(app) {
 	app.get("/scrape", function(req, res) {
 		// Initialize promise array to hold all save entry queries
 		var promiseArray = [];
-		console.log(req.body.savedCount);
 
 		// First, we grab the body of the html with request
 		request("https://www.nytimes.com/section/world?WT.nav=page&action=click&contentCollection=World&module=HPMiniNav&pgtype=Homepage&region=TopBar", function(error, response, html) {
