@@ -6,7 +6,7 @@ Scrapes news from NY Times and displays it aesthetically for better readability.
 
 ### Cool features
 
-* Users can leisurely read headline, summary, byline of latest news on NY Times website.
+* Users can leisurely read headline, summary, byline of latest news on NY Times website without all the clutter that come with it.
 * Clicking 'Read full story' lets user follow the story on parent website.
 * Badges on menu bar lets user know total number of articles and articles saved.
 * Scrape NY Times for articles anytime to get new and latest news.
